@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\User;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
-class UserController extends Controller
+class MemberController extends Controller
 {
     /**
      * Create User\
@@ -49,18 +49,18 @@ class UserController extends Controller
             $map['type'] = $validated['type'];
             $map['open_id'] = $validated['open_id'];
 
-            $user = User::where($map)->first();
+            $user = Member::where($map)->first();
            
            
             if (empty($user->id)) {
                 $validated["token"] = md5(uniqid() . rand(1000, 9999));
                 $validated['created_at'] = Carbon::now();
               //  $validated['password'] = Hash::make($validated['password']);
-                $userID = User::insertGetId($validated);
-                $userInfo = User::where('id', '=', $userID)->first();
+                $userID = Member::insertGetId($validated);
+                $userInfo = Member::where('id', '=', $userID)->first();   
                 $accesstoken = $userInfo->createToken(uniqid())->plainTextToken;
                 $userInfo->access_token = $accesstoken;
-                User::where('id', '=', $userID)->update(['access_token' => $accesstoken]);
+                Member::where('id', '=', $userID)->update(['access_token' => $accesstoken]);
 
                 return response()->json([
                     'code' => 200,
@@ -71,7 +71,7 @@ class UserController extends Controller
 
             $accesstoken = $user->createToken(uniqid())->plainTextToken;
             $user->access_token = $accesstoken;
-            User::where('id', '=', $user->id)->update(['access_token' => $accesstoken]);
+            Member::where('id', '=', $user->id)->update(['access_token' => $accesstoken]);
 
             return response()->json([
                 'code' => 200,
