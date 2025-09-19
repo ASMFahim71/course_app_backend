@@ -21,6 +21,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
+   
+    protected $namespace = 'App\Http\Controllers';
+
     public function panel(Panel $panel): Panel
     {
         return $panel

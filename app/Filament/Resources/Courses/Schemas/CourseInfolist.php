@@ -16,9 +16,10 @@ class CourseInfolist
         return $schema
             ->components([
                 TextEntry::make('name'),
+                
                 ImageEntry::make('thumbnail')
-                    ->disk('public')
-                    ->imageHeight(100),
+                ->disk('public')
+                ->imageHeight(100),
 
 
                 TextEntry::make('video')

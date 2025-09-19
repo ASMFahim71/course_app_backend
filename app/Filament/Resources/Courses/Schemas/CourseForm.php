@@ -40,9 +40,13 @@ class CourseForm
                 FileUpload::make('thumbnail')
                     ->disk('public')
                     ->directory('course-thumbnails')
-                    ->default(null)
-                    ->visibility('public'),
-
+                    ->visibility('public')
+                    ->required(fn(string $context): bool => $context === 'create')
+                    ->afterStateHydrated(function (FileUpload $component, $state) {
+                        // Clear the state to prevent loading existing files
+                        $component->state(null);
+                    })
+                    ->dehydrated(true),
 
                 FileUpload::make('video')
                     ->disk('public')
