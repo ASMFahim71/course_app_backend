@@ -11,10 +11,10 @@ class CourseController extends Controller
 {
     public function courseList(Request $request)
     {
-        // Cache for 60 minutes (3600 seconds)
-        $courses = Cache::remember('courses.list', 3600, function () {
-            return Course::select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
-        });
+       
+       
+         $courses = Course::select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
+      
 
         return response()->json([
             'code' => 200,
