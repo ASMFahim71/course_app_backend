@@ -41,5 +41,38 @@ class LessonController extends Controller
         
     }
 
+    //for a single lesson
+    public function lessonDetail(Request $request)
+    {
+       
+       $id=$request->id;
+       try{
+        $result= Lesson::where('id','=',$id)->select(
+            
+            'name',
+            'thumbnail',
+            'video',
+            'description'
+        )->get();
+
+        return response()->json([
+            'code' => 200,
+            'msg' => 'Lesson Detail',
+            'data' => $result
+        ], 200);
+        
+
+       }
+       catch(\Exception $e){
+          return response()->json([
+            'code' => 500,
+            'msg' => 'Lesson List Load Failed',
+            'data' => $e->getMessage()
+          ], 500);
+         
+       }
+        
+    }
+
   
 }

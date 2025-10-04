@@ -34,8 +34,8 @@ class LessonInfolist
                             ->disk('public')
                             ->imageHeight(80)
                             ->columnSpan(1),
-                            TextEntry::make('video')
-                            ->label('url')
+                            TextEntry::make('url')
+                            ->label('video')
                             ->html()
                             ->formatStateUsing(fn($state) => $state
                                 ? "<video width='320' height='200' controls>

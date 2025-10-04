@@ -57,7 +57,8 @@ class LessonForm
                                 '1:1',
                             ])
                             ->columnSpan(1),
-                            FileUpload::make('video')
+                            FileUpload::make('url')
+                            ->label('video')
                             ->disk('public')
                             ->maxSize(51200000)
                             ->directory('lesson-videos')
