@@ -18,7 +18,8 @@ class Course extends Model
         'lesson_num',
         'video_length',
         'follow',
-        'score'
+        'score',
+        'recommended'
     ];
 
     /**

@@ -11,10 +11,10 @@ class CourseController extends Controller
 {
     public function courseList(Request $request)
     {
-       
-       
-         $courses = Course::select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
-      
+
+
+        $courses = Course::select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
+
 
         return response()->json([
             'code' => 200,
@@ -53,4 +53,51 @@ class CourseController extends Controller
             ], 500);
         }
     }
+
+    public function coursesBought(Request $request)
+    {
+
+        $user = $request->user();
+
+        $courses = Course::where('user_token', '=', $user->token)
+            ->select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
+
+
+        return response()->json([
+            'code' => 200,
+            'msg' => 'The courses you have bought',
+            'data' => $courses
+        ], 200);
+    }
+    public function coursesSearchDefault(Request $request)
+    {
+        $user = request()->user();
+        $result = Course::where('recommended', '=', '1')
+        ->select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
+
+        return response()->json(
+            [
+                'code' => 200,
+                'msg' => 'Recommended Courses',
+                'data' => $result
+            ], 200);
+            
+        
+    }    public function coursesSearch(Request $request)
+    {
+        $user = request()->user();
+        $search = $request->search;
+        $result = Course::where('name', 'like', '%' . $search . '%')
+        ->select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
+
+        return response()->json(
+            [
+                'code' => 200,
+                'msg' => 'Search Courses',
+                'data' => $result
+            ], 200);
+            
+        
+    }
+
 }

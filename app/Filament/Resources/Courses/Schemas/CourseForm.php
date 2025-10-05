@@ -10,7 +10,7 @@ use Filament\Forms\Components\Textarea;
 
 use Filament\Forms\Components\FileUpload;
 use App\Models\Member;
-
+use Filament\Forms\Components\Toggle;
 class CourseForm
 {
     public static function configure(Schema $schema): Schema
@@ -80,6 +80,15 @@ class CourseForm
                     ->maxValue(5)
                     ->step(0.1)
                     ->default(0),
+
+                    Toggle::make('recommended')
+                    ->label('Recommended')
+                    ->default(false)
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->onIcon('heroicon-o-check')
+                    ->offIcon('heroicon-o-x-mark'),
+
             ]);
     }
 }

@@ -19,9 +19,12 @@ use App\Http\Controllers\SslCommerzPaymentController;
     Route::group(['middleware'=>'auth:sanctum'],function(){
         Route::any('/courseList',[CourseController::class,'courseList']);
         Route::any('/courseDetail',[CourseController::class,'courseDetail']);
+        Route::any('/coursesBought',[CourseController::class,'coursesBought']);
         Route::any('/lessonList',[LessonController::class,'lessonList']);
         Route::any('/lessonDetail',[LessonController::class,'lessonDetail']);
         Route::any('/checkout',[PaymentController::class,'checkout']);
+        Route::any('/coursesSearchDefault',[CourseController::class,'coursesSearchDefault']);
+        Route::any('/coursesSearch',[CourseController::class,'coursesSearch']);
        
     });
 
