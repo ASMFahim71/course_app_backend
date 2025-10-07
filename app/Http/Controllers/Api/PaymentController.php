@@ -24,7 +24,7 @@ class PaymentController extends Controller
             $courseId = $request->id;
             $user = $request->user();
             //key from stripe
-            Stripe::setApiKey(env('STRIPE_SK'));
+            Stripe::setApiKey('sk_test_51SDNGPDkSXU2LP9VXM6P5MYwc9ayMI3c7QPyn9WFrUfIzdn3apw0eXVZYThRHjpESZC4pLWouXWY3Wua4bK1XUJz00qFAuhQRC');
 
             $searchCourse = Course::where('id', '=', $courseId)->first();
             if (empty($searchCourse)) {
@@ -50,7 +50,7 @@ class PaymentController extends Controller
                 ], 200);
             }
 
-            $your_domain = env('APP_URL');
+            $your_domain = 'https://shapelier-resumable-sharri.ngrok-free.dev/';
             $map = [];
             $map['user_token'] = $user->token;
             $map['course_id'] = $courseId;
@@ -95,7 +95,7 @@ class PaymentController extends Controller
 
                 ],
                 'mode' => 'payment',
-                'success_url' => $your_domain . '/success',
+                'success_url' => $your_domain . 'success',
                 'cancel_url' => $your_domain . 'cancel',
 
 
@@ -119,8 +119,8 @@ class PaymentController extends Controller
 
         Log::info('starts here...');
 
-        Stripe::setApiKey(env('STRIPE_SK'));
-        $endPointSecret = env('STRIPE_WHSEC');
+        Stripe::setApiKey('sk_test_51SDNGPDkSXU2LP9VXM6P5MYwc9ayMI3c7QPyn9WFrUfIzdn3apw0eXVZYThRHjpESZC4pLWouXWY3Wua4bK1XUJz00qFAuhQRC');
+        $endPointSecret = 'whsec_6CZl5HB6pO8E7OynAzBOd9q02aXuCcji';
         $payload = @file_get_contents('php://input'); //get the payload from the request
         $signHeader = $_SERVER['HTTP_STRIPE_SIGNATURE']; //get the signature from the request
         $event = null;

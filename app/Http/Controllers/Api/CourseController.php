@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Member;
 
 class CourseController extends Controller
 {
@@ -59,9 +60,11 @@ class CourseController extends Controller
 
         $user = $request->user();
 
-        $courses = Course::where('user_token', '=', $user->token)
-            ->select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
-
+        $courses = Course::join('orders', 'courses.id', '=', 'orders.course_id')
+        ->where('orders.user_token', '=', $user->token)
+        ->where('orders.status', '=', 1)
+        ->select('courses.name', 'courses.thumbnail', 'courses.price', 'courses.lesson_num', 'courses.id')
+        ->get();
 
         return response()->json([
             'code' => 200,
@@ -83,7 +86,9 @@ class CourseController extends Controller
             ], 200);
             
         
-    }    public function coursesSearch(Request $request)
+    }   
+    
+    public function coursesSearch(Request $request)
     {
         $user = request()->user();
         $search = $request->search;
@@ -100,4 +105,28 @@ class CourseController extends Controller
         
     }
 
+    public function authorCourseList(Request $request){
+        $token=$request->token;
+        $courses=Course::where('user_token','=',$token)
+        ->select('name','thumbnail','price','lesson_num','price','id')->get();
+        return response()->json([
+            'code' => 200,
+            'msg' => 'Author Course List',
+            'data' => $courses
+        ], 200);
+    }
+    
+    public function courseAuthor(Request $request){
+        $token=$request->token;
+        $author=Member::where('token','=',$token)
+        ->select('name','email','avatar','token','description','job')->first();
+        return response()->json([
+            'code' => 200,
+            'msg' => 'Author Info',
+            'data' => $author
+        ], 200);
+    }
+
 }
+
+

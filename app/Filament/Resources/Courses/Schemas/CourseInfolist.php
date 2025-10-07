@@ -19,6 +19,8 @@ class CourseInfolist
                 
                 ImageEntry::make('thumbnail')
                 ->disk('public')
+                ->visibility('public')
+                
                 ->imageHeight(100),
 
 

@@ -6,7 +6,8 @@ use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\LessonController;
 use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\SslCommerzPaymentController;
+use App\Http\Controllers\Api\SslCommerzController;
+
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
@@ -25,9 +26,17 @@ use App\Http\Controllers\SslCommerzPaymentController;
         Route::any('/checkout',[PaymentController::class,'checkout']);
         Route::any('/coursesSearchDefault',[CourseController::class,'coursesSearchDefault']);
         Route::any('/coursesSearch',[CourseController::class,'coursesSearch']);
-       
+        Route::any('/authorCourseList',[CourseController::class,'authorCourseList']);
+        Route::any('/courseAuthor',[CourseController::class,'courseAuthor']);
     });
 
     Route::any('/webGoHooks',[PaymentController::class,'webGoHooks']);
 
     //Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+    Route::post('/sslcommerz/create', [SslCommerzController::class,'createPayment']);
+    Route::match(['get', 'post'], '/sslcommerz/success', [SslCommerzController::class,'success']);
+    Route::match(['get', 'post'], '/sslcommerz/fail', [SslCommerzController::class,'fail']);
+    Route::match(['get', 'post'], '/sslcommerz/cancel', [SslCommerzController::class,'cancel']);
+    Route::post('/sslcommerz/ipn', [SslCommerzController::class,'ipn']);
+    Route::post('/sslcommerz/validate', [SslCommerzController::class, 'validatePayment']);
