@@ -9,6 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\IconColumn;
 class CoursesTable
 {
     public static function configure(Table $table): Table
@@ -24,8 +25,10 @@ class CoursesTable
                 TextColumn::make('teacher.name')
                     ->label('Teacher'),
                 TextColumn::make('price'),
-                TextColumn::make('lesson_num'),
-                TextColumn::make('video_length'),
+                IconColumn::make('recommended')
+                ->boolean(),
+             
+               
                 TextColumn::make('follow'),
                 TextColumn::make('score'),
                // TextColumn::make('created_at'),
