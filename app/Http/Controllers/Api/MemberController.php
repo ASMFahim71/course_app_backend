@@ -28,7 +28,7 @@ class MemberController extends Controller
                 $request->all(),
                 [
                     'avatar' => 'required',
-                    'type' => 'required',
+                   
                     'open_id' => 'required',
                     'name' => 'required',
                     'email' => 'required',
@@ -46,7 +46,7 @@ class MemberController extends Controller
 
             $validated = $validateUser->validated();
             $map = [];
-            $map['type'] = $validated['type'];
+         
             $map['open_id'] = $validated['open_id'];
 
             $user = Member::where($map)->first();

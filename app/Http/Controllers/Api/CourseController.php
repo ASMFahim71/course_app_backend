@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Member;
-
+use App\Models\TeacherProfile;
 class CourseController extends Controller
 {
     public function courseList(Request $request)
@@ -118,8 +118,22 @@ class CourseController extends Controller
     
     public function courseAuthor(Request $request){
         $token=$request->token;
-        $author=Member::where('token','=',$token)
-        ->select('name','email','avatar','token','description','job')->first();
+        
+        /*  $courses = Course::join('orders', 'courses.id', '=', 'orders.course_id')
+        ->where('orders.user_token', '=', $user->token)
+        ->where('orders.status', '=', 1)
+        ->select('courses.name', 'courses.thumbnail', 'courses.price', 'courses.lesson_num', 'courses.id')
+        ->get(); */
+
+        
+         $author=TeacherProfile::join('members','teacher_profiles.user_token','=','members.token')
+         ->where('teacher_profiles.user_token','=',$token)
+         ->select('members.name','members.description','teacher_profiles.avatar',
+         'teacher_profiles.cover','teacher_profiles.rating','teacher_profiles.downloads',
+         'teacher_profiles.total_students','teacher_profiles.job','members.token')
+         ->first();
+       
+       
         return response()->json([
             'code' => 200,
             'msg' => 'Author Info',

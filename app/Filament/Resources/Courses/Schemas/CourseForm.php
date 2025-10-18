@@ -43,6 +43,7 @@ class CourseForm
                     ->visibility('public')
                     ->required(fn(string $context): bool => $context === 'create')
                     ->dehydrated(true),
+                    
 
                 FileUpload::make('video')
                     ->disk('public')
@@ -64,6 +65,7 @@ class CourseForm
                 TextInput::make('lesson_num')
                     ->numeric()
                     ->default(0),
+                
 
                 TextInput::make('video_length')
                     ->label('Video Length (minutes)')

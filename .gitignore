@@ -22,3 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/public/stripe-webhook
+app/Http/Controllers/Api/PaymentController.php
+app/Http/Controllers/Api/SslCommerzController.php

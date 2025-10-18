@@ -17,6 +17,11 @@ class CourseInfolist
             ->components([
                 TextEntry::make('name'),
                 
+                TextEntry::make('teacher.name')
+                    ->label('Teacher'),
+
+                
+                
                 ImageEntry::make('thumbnail')
                 ->disk('public')
                 ->visibility('public')

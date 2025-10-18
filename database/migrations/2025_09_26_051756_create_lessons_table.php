@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('course_id');
+            $table->string('user_token');
             $table->string('name',200);
             $table->string('thumbnail',200);
            

@@ -34,4 +34,12 @@ class Course extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    /**
+     * Get the teacher (member) that owns the course.
+     */
+    public function teacher(): BelongsTo
+    {
+        return $this->belongsTo(Member::class, 'user_token', 'token');
+    }
 }

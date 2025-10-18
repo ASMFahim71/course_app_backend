@@ -24,7 +24,7 @@ class PaymentController extends Controller
             $courseId = $request->id;
             $user = $request->user();
             //key from stripe
-            Stripe::setApiKey('sk_test_51SDNGPDkSXU2LP9VXM6P5MYwc9ayMI3c7QPyn9WFrUfIzdn3apw0eXVZYThRHjpESZC4pLWouXWY3Wua4bK1XUJz00qFAuhQRC');
+            Stripe::setApiKey(env('STRIPE_SK'));
 
             $searchCourse = Course::where('id', '=', $courseId)->first();
             if (empty($searchCourse)) {
@@ -119,8 +119,8 @@ class PaymentController extends Controller
 
         Log::info('starts here...');
 
-        Stripe::setApiKey('sk_test_51SDNGPDkSXU2LP9VXM6P5MYwc9ayMI3c7QPyn9WFrUfIzdn3apw0eXVZYThRHjpESZC4pLWouXWY3Wua4bK1XUJz00qFAuhQRC');
-        $endPointSecret = 'whsec_6CZl5HB6pO8E7OynAzBOd9q02aXuCcji';
+        Stripe::setApiKey(env('STRIPE_SK'));
+        $endPointSecret = env('STRIPE_WEBHOOK_SECRET');
         $payload = @file_get_contents('php://input'); //get the payload from the request
         $signHeader = $_SERVER['HTTP_STRIPE_SIGNATURE']; //get the signature from the request
         $event = null;

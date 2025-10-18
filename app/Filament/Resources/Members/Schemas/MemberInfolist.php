@@ -19,11 +19,13 @@ class MemberInfolist
                 TextEntry::make('email')
                     ->label('Email address'),
                 TextEntry::make('avatar'),
-                TextEntry::make('type'),
+            
                 TextEntry::make('open_id'),
                 TextEntry::make('token'),
                 TextEntry::make('age')
                     ->numeric(),
+                TextEntry::make('description'),
+                TextEntry::make('job'),
             ]);
     }
 }

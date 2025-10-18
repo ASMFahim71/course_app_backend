@@ -17,11 +17,9 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->string('avatar')->nullable();
-            $table->string('type')->nullable();
             $table->string('open_id')->nullable();
             $table->string('access_token')->nullable();
             $table->string('token')->nullable();
-            $table->integer('age')->nullable();
             
 
            
