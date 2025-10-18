@@ -50,7 +50,7 @@ class PaymentController extends Controller
                 ], 200);
             }
 
-            $your_domain = 'https://shapelier-resumable-sharri.ngrok-free.dev/';
+            $your_domain = '';
             $map = [];
             $map['user_token'] = $user->token;
             $map['course_id'] = $courseId;
