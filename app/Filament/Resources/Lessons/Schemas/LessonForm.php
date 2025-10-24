@@ -9,32 +9,43 @@ use Filament\Forms\Components\Select;
 use App\Models\Course;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Hidden;
+
 class LessonForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextInput::make('course_id')
-                    ->required()
-                    ->numeric(),
                 Select::make('course_id')
                     ->label('Course')
                     ->options(Course::all()->pluck('name', 'id'))
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->required()
+                    ->reactive()
+                    ->afterStateUpdated(function ($set, $state) {
+                        if ($state) {
+                            $course = Course::find($state);
+                            if ($course) {
+                                $set('user_token', $course->user_token);
+                            }
+                        }
+                    }),
+
+                Hidden::make('user_token'),
                 TextInput::make('name')
                     ->required(),
-                
-                    FileUpload::make('thumbnail')
+
+                FileUpload::make('thumbnail')
                     ->disk('public')
                     ->directory('video-thumbnails')
                     ->visibility('public')
                     ->required(fn(string $context): bool => $context === 'create')
                     ->dehydrated(true),
-                   
-                   
-                    Repeater::make('video')
+
+
+                Repeater::make('video')
                     ->label('Videos')
                     ->schema([
                         TextInput::make('name')
@@ -48,16 +59,9 @@ class LessonForm
                             ->disk('public')
                             ->directory('lesson-thumbnails')
                             ->visibility('public')
-                            ->image()
-                           
-                            ->imageEditor()
-                            ->imageEditorAspectRatios([
-                                '16:9',
-                                '4:3',
-                                '1:1',
-                            ])
-                            ->columnSpan(1),
-                            FileUpload::make('url')
+                            ->dehydrated(true)
+                        ,
+                        FileUpload::make('url')
                             ->label('video')
                             ->disk('public')
                             ->maxSize(51200000)
@@ -65,18 +69,18 @@ class LessonForm
                             ->default(null)
                             ->visibility('public')
                             ->acceptedFileTypes(['video/mp4', 'video/mov', 'video/avi', 'video/wmv', 'video/mp3', 'video/m4a', 'video/wma']),
-        
+
                     ])
                     ->columns(3)
                     ->defaultItems(0)
                     ->addActionLabel('New')
                     ->collapsible()
-                    ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Video')
+                    ->itemLabel(fn(array $state): ?string => $state['name'] ?? 'Video')
                     ->columnSpanFull(),
 
 
 
-                
+
                 Textarea::make('description')
                     ->columnSpanFull(),
             ]);
