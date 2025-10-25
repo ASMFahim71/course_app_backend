@@ -28,6 +28,10 @@ use App\Http\Controllers\Api\SslCommerzController;
         Route::any('/coursesSearch',[CourseController::class,'coursesSearch']);
         Route::any('/authorCourseList',[CourseController::class,'authorCourseList']);
         Route::any('/courseAuthor',[CourseController::class,'courseAuthor']);
+        Route::any('/update_photo',[MemberController::class,'update_photo']);
+        Route::any('/memberPay',[MemberController::class,'memberPayment']);
+        Route::any('/changeName',[MemberController::class,'changeName']);
+        Route::any('/changeDescription',[MemberController::class,'changeDescription']);
     });
 
     Route::any('/webGoHooks',[PaymentController::class,'webGoHooks']);
