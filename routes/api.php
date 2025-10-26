@@ -72,4 +72,3 @@ Route::get('/storage/{path}', function ($path) {
         'Access-Control-Allow-Headers' => '*',
     ]);
 })->where('path', '.*');
-//dummy
