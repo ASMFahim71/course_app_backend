@@ -15,6 +15,35 @@ use App\Http\Controllers\Api\SslCommerzController;
 
 
 
+    Route::post('/login',[MemberController::class,'login']);
+
+    Route::group(['middleware'=>'auth:sanctum'],function(){
+        Route::any('/courseList',[CourseController::class,'courseList']);
+        Route::any('/courseDetail',[CourseController::class,'courseDetail']);
+        Route::any('/coursesBought',[CourseController::class,'coursesBought']);
+        Route::any('/lessonList',[LessonController::class,'lessonList']);
+        Route::any('/lessonDetail',[LessonController::class,'lessonDetail']);
+        Route::any('/checkout',[PaymentController::class,'checkout']);
+        Route::any('/coursesSearchDefault',[CourseController::class,'coursesSearchDefault']);
+        Route::any('/coursesSearch',[CourseController::class,'coursesSearch']);
+        Route::any('/authorCourseList',[CourseController::class,'authorCourseList']);
+        Route::any('/courseAuthor',[CourseController::class,'courseAuthor']);
+        Route::any('/update_photo',[MemberController::class,'update_photo']);
+        Route::any('/memberPay',[MemberController::class,'memberPayment']);
+        Route::any('/changeName',[MemberController::class,'changeName']);
+        Route::any('/changeDescription',[MemberController::class,'changeDescription']);
+    });
+
+    Route::any('/webGoHooks',[PaymentController::class,'webGoHooks']);
+
+    //Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+    Route::post('/sslcommerz/create', [SslCommerzController::class,'createPayment']);
+    Route::match(['get', 'post'], '/sslcommerz/success', [SslCommerzController::class,'success']);
+    Route::match(['get', 'post'], '/sslcommerz/fail', [SslCommerzController::class,'fail']);
+    Route::match(['get', 'post'], '/sslcommerz/cancel', [SslCommerzController::class,'cancel']);
+    Route::post('/sslcommerz/ipn', [SslCommerzController::class,'ipn']);
+    Route::post('/sslcommerz/validate', [SslCommerzController::class, 'validatePayment']);
 Route::post('/login', [MemberController::class, 'login']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
