@@ -8,14 +8,7 @@ use App\Http\Controllers\Api\LessonController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SslCommerzController;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-
-
-
-
-Route::post('/login', [MemberController::class, 'login']);
+ Route::post('/login',[MemberController::class,'login']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::any('/courseList', [CourseController::class, 'courseList']);
@@ -31,12 +24,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::any('/coursesSearch', [CourseController::class, 'coursesSearch']);
     Route::any('/authorCourseList', [CourseController::class, 'authorCourseList']);
     Route::any('/courseAuthor', [CourseController::class, 'courseAuthor']);
+    Route::any('/update_photo',[MemberController::class,'update_photo']);
+    Route::any('/memberPay',[MemberController::class,'memberPayment']);
+    Route::any('/changeName',[MemberController::class,'changeName']);
+    Route::any('/changeDescription',[MemberController::class,'changeDescription']);
 });
 
 Route::any('/webGoHooks', [PaymentController::class, 'webGoHooks']);
-
 //Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
-
 Route::post('/sslcommerz/create', [SslCommerzController::class, 'createPayment']);
 Route::match(['get', 'post'], '/sslcommerz/success', [SslCommerzController::class, 'success']);
 Route::match(['get', 'post'], '/sslcommerz/fail', [SslCommerzController::class, 'fail']);
@@ -72,4 +67,3 @@ Route::get('/storage/{path}', function ($path) {
         'Access-Control-Allow-Headers' => '*',
     ]);
 })->where('path', '.*');
-//dummy
