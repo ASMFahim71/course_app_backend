@@ -109,7 +109,14 @@ class MemberController extends Controller
             ->join('members', 'courses.user_token', '=', 'members.token')
             ->where('orders.user_token', $user->token)
             ->where('orders.status', 1)
-            ->select('courses.id','orders.total_amount as price', 'courses.name', 'members.name as teacher_name','courses.thumbnail','orders.transaction_id')
+            ->select(
+                'courses.id',
+                'orders.total_amount as price',
+                'courses.name',
+                'members.name as teacher_name',
+                'courses.thumbnail',
+                'orders.transaction_id'
+            )
             ->get();
         return response()->json([
             'code' => 200,
@@ -118,7 +125,8 @@ class MemberController extends Controller
         ], 200);
     }
 
-    public function changeName(Request $request){
+    public function changeName(Request $request)
+    {
         $user = Auth::user();
         $validateUser = Validator::make($request->all(), [
             'name' => 'required|string|max:20',
@@ -136,7 +144,8 @@ class MemberController extends Controller
             'msg' => 'Name changed successfully',
         ], 200);
     }
-    public function changeDescription(Request $request){
+    public function changeDescription(Request $request)
+    {
         $user = Auth::user();
         $validateUser = Validator::make($request->all(), [
             'description' => 'required|string|max:50',
