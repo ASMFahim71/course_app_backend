@@ -5,9 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\LessonController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SslCommerzController;
-
+use Illuminate\Support\Facades\Broadcast;
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
@@ -28,8 +29,12 @@ use App\Http\Controllers\Api\SslCommerzController;
         Route::any('/coursesSearch',[CourseController::class,'coursesSearch']);
         Route::any('/authorCourseList',[CourseController::class,'authorCourseList']);
         Route::any('/courseAuthor',[CourseController::class,'courseAuthor']);
+        Route::post('/users',[MessageController::class,'users']);
+        Route::post('/sendMessage',[MessageController::class,'sendMessage']);
+        Route::post('/getMessage/{id}',[MessageController::class,'getMessage']);
+        Route::post('/getUserId',[MemberController::class,'getUserId']);
     });
-
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
     Route::any('/webGoHooks',[PaymentController::class,'webGoHooks']);
 
     //Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
