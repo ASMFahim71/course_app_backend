@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\SslCommerzController;
         Route::any('/memberPay',[MemberController::class,'memberPayment']);
         Route::any('/changeName',[MemberController::class,'changeName']);
         Route::any('/changeDescription',[MemberController::class,'changeDescription']);
+        //conflit
     });
 
     Route::any('/webGoHooks',[PaymentController::class,'webGoHooks']);
