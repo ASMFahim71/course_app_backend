@@ -24,7 +24,7 @@ class PaymentController extends Controller
             $courseId = $request->id;
             $user = $request->user();
             //key from stripe
-            Stripe::setApiKey(env('STRIPE_SK'));
+            Stripe::setApiKey(config('services.stripe.secret'));
 
             $searchCourse = Course::where('id', '=', $courseId)->first();
             if (empty($searchCourse)) {
@@ -50,7 +50,7 @@ class PaymentController extends Controller
                 ], 200);
             }
 
-            $your_domain = '';
+            $your_domain = config('app.url'); ;
             $map = [];
             $map['user_token'] = $user->token;
             $map['course_id'] = $courseId;
@@ -95,8 +95,8 @@ class PaymentController extends Controller
 
                 ],
                 'mode' => 'payment',
-                'success_url' => $your_domain . 'success',
-                'cancel_url' => $your_domain . 'cancel',
+                'success_url' => $your_domain . '/success',
+                'cancel_url' => $your_domain . '/cancel',
 
 
             ]);
@@ -119,15 +119,16 @@ class PaymentController extends Controller
 
         Log::info('starts here...');
 
-        Stripe::setApiKey(env('STRIPE_SK'));
-        $endPointSecret = env('STRIPE_WEBHOOK_SECRET');
+        Stripe::setApiKey(config('services.stripe.secret'));
+        $endPointSecret = config('services.stripe.webhook_secret');
         $payload = @file_get_contents('php://input'); //get the payload from the request
         $signHeader = $_SERVER['HTTP_STRIPE_SIGNATURE']; //get the signature from the request
         $event = null;
         Log::info('set up butt finished');
         try {
 
-            $event = \Stripe\Webhook::constructEvent($payload, $signHeader, $endPointSecret);
+            $event = Webhook::constructEvent($payload, $signHeader, $endPointSecret);
+
 
 
         } catch (\UnexpectedValueException $e) {
@@ -135,29 +136,50 @@ class PaymentController extends Controller
             Log::info('UnexpectedValueException' . $e);
             http_response_code(400);
             exit();
-        }catch(\Stripe\Exception\SignatureVerificationException $e){
+        }catch(SignatureVerificationException $e){
             Log::info('SignatureVerificationException' . $e);
             http_response_code(400);
             exit(); 
         }
         if($event->type=='charge.succeeded'){
-            $session=$event->data->object;
-
-            $metadata=$session['metadata'];
-            $orderNum=$metadata->order_id;
-            $userToken=$metadata->user_token;
-           Log::info('order id '.$orderNum);
-           $map=[];
-           $map['status']=1;
-           $map['updated_at']=Carbon::now();
-           $whereMap=[];
-           $whereMap['user_token']=$userToken;
-           $whereMap['id']=$orderNum;
-           Order::where($whereMap)->update($map);
-
-
-
+            try {
+                $charge = $event->data->object;
+                $transactionId = $charge->id; // Use charge ID, not payment_intent
+                
+                // Check if metadata exists
+                if (!isset($charge->metadata) || !isset($charge->metadata->order_id) || !isset($charge->metadata->user_token)) {
+                    Log::error('Missing metadata in charge.succeeded event');
+                    http_response_code(400);
+                    return;
+                }
+                
+                $metadata = $charge->metadata;
+                $orderNum = $metadata->order_id;
+                $userToken = $metadata->user_token;
+                
+                Log::info('Processing charge.succeeded - Order ID: ' . $orderNum . ', User Token: ' . $userToken);
+                
+                $map = [];
+                $map['status'] = 1;
+                $map['transaction_id'] = $transactionId;
+                $map['updated_at'] = Carbon::now();
+                
+                $whereMap = [];
+                $whereMap['user_token'] = $userToken;
+                $whereMap['id'] = $orderNum;
+                
+                $updateResult = Order::where($whereMap)->update($map);
+                
+                Log::info('Order updated successfully. Rows affected: ' . $updateResult);
+                
+            } catch (\Exception $e) {
+                Log::error('Error processing charge.succeeded: ' . $e->getMessage());
+                Log::error('Stack trace: ' . $e->getTraceAsString());
+                http_response_code(500);
+                return;
+            }
         }
+        
         http_response_code(200);
     }
 }
