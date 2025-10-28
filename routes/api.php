@@ -5,8 +5,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\LessonController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SslCommerzController;
+use Illuminate\Support\Facades\Broadcast;
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 
  Route::post('/login',[MemberController::class,'login']);
 
@@ -28,6 +33,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::any('/memberPay',[MemberController::class,'memberPayment']);
     Route::any('/changeName',[MemberController::class,'changeName']);
     Route::any('/changeDescription',[MemberController::class,'changeDescription']);
+          Route::post('/users',[MessageController::class,'users']);
+        Route::post('/sendMessage',[MessageController::class,'sendMessage']);
+        Route::post('/getMessage/{id}',[MessageController::class,'getMessage']);
+        Route::post('/getUserId',[MemberController::class,'getUserId']);
 });
 
 Route::any('/webGoHooks', [PaymentController::class, 'webGoHooks']);
@@ -46,6 +55,8 @@ Route::get('/uploads/{filename}', function ($filename) {
         abort(404);
     }
 
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+    Route::any('/webGoHooks',[PaymentController::class,'webGoHooks']);
     return response()->file($path, [
         'Access-Control-Allow-Origin' => '*',
         'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',
