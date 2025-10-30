@@ -89,6 +89,23 @@ class MemberController extends Controller
             ], 500);
         }
     }
+    public function getUserId(Request $request)
+    {
+        $user = $request->user(); 
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired token.'
+            ], 401);
+        }
+
+        return response()->json([
+            'code'=>200,
+            'success' => true,
+            'data' => $user->id,
+        ],200);
+    }
 
     public function update_photo(Request $request)
     {
