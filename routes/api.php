@@ -1,0 +1,54 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\MemberController;
+use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\LessonController;
+use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\SslCommerzController;
+use Illuminate\Support\Facades\Broadcast;
+use App\Events\MessageSent;
+use App\Events\testEvent;
+use App\Http\Controllers\Api\PhotoController;
+use App\Http\Controllers\Api\UserController;
+use App\Models\Message;
+use Symfony\Component\Translation\MessageCatalogue;
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
+
+
+
+
+    Route::post('/login',[MemberController::class,'login']);
+
+    Route::group(['middleware'=>'auth:sanctum'],function(){
+        Route::any('/courseList',[CourseController::class,'courseList']);
+        Route::any('/courseDetail',[CourseController::class,'courseDetail']);
+        Route::any('/coursesBought',[CourseController::class,'coursesBought']);
+        Route::any('/lessonList',[LessonController::class,'lessonList']);
+        Route::any('/lessonDetail',[LessonController::class,'lessonDetail']);
+        Route::any('/checkout',[PaymentController::class,'checkout']);
+        Route::any('/coursesSearchDefault',[CourseController::class,'coursesSearchDefault']);
+        Route::any('/coursesSearch',[CourseController::class,'coursesSearch']);
+        Route::any('/authorCourseList',[CourseController::class,'authorCourseList']);
+        Route::any('/courseAuthor',[CourseController::class,'courseAuthor']);
+        Route::post('/author',[MessageController::class,'author']);
+        Route::post('/users',[MessageController::class,'users']);
+        Route::post('/sendMessage',[MessageController::class,'sendMessage']);
+        Route::post('/getMessage/{id}',[MessageController::class,'getMessage']);
+        Route::post('/getUserId',[MemberController::class,'getUserId']);
+    });
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+    Route::any('/webGoHooks',[PaymentController::class,'webGoHooks']);
+
+    //Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+    Route::post('/sslcommerz/create', [SslCommerzController::class,'createPayment']);
+    Route::match(['get', 'post'], '/sslcommerz/success', [SslCommerzController::class,'success']);
+    Route::match(['get', 'post'], '/sslcommerz/fail', [SslCommerzController::class,'fail']);
+    Route::match(['get', 'post'], '/sslcommerz/cancel', [SslCommerzController::class,'cancel']);
+    Route::post('/sslcommerz/ipn', [SslCommerzController::class,'ipn']);
+    Route::post('/sslcommerz/validate', [SslCommerzController::class, 'validatePayment']);
