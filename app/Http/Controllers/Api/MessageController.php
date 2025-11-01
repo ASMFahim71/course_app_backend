@@ -18,25 +18,25 @@ class MessageController extends Controller
     public function users(Request $request)
     {
         $current_user = Auth::user()->id;
-        $users = Member::where('id', '!=', $current_user)->where('role','teacher')->get();
-        //$users = Member::where('id', '!=', $current_user)->get();
+        $chatUserIds = Chat::where('sender_id', $current_user)->orWhere('receiver_id', $current_user)->pluck('sender_id','receiver_id')->unique()->filter(fn($id) => ($id != $current_user))->values();
+        $users=Member::whereIn('id',$chatUserIds)->get();
         return response()->json([
-            'code' => 200,
-            'msg' => "Users fetch successfully",
-            'data' => $users
-        ], 200);
+            'code'=>200,
+            'msg'=>"Successfully fetched users",
+            'data'=>$users,
+        ],200);
     }
     // fetch author
 
     public function author(Request $request)
     {
-        $token=$request->token;
-        $author=Member::where('token',$token)->first();
+        $token = $request->token;
+        $author = Member::where('token', $token)->first();
         return response()->json([
-            'code'=>200,
-            'msg'=>"Successfully fetch author",
-            'data'=>$author
-        ],200);
+            'code' => 200,
+            'msg' => "Successfully fetch author",
+            'data' => $author
+        ], 200);
     }
 
     //send message to others
@@ -68,7 +68,7 @@ class MessageController extends Controller
                 'chat_id' => $chat->id,
             ]);
 
-        broadcast(new MessageSent($msg))->toOthers();
+            broadcast(new MessageSent($msg))->toOthers();
 
             return response()->json([
                 'code' => 200,
@@ -81,7 +81,8 @@ class MessageController extends Controller
                     'code' => 500,
                     'msg' => "failed to sent message",
                     'data' => $e->getMessage(),
-                ],500
+                ],
+                500
             );
         }
     }
@@ -92,12 +93,12 @@ class MessageController extends Controller
     {
         $messages = Message::where(function ($query) use ($id) {
             $query->where('sender_id', Auth::user()->id)->where('receiver_id', $id);
-        })->orWhere(function($query)use($id){
-            $query->where('sender_id',$id)->where('receiver_id',Auth::user()->id);
+        })->orWhere(function ($query) use ($id) {
+            $query->where('sender_id', $id)->where('receiver_id', Auth::user()->id);
         })->get();
 
-        $messages=$messages->map(function($message){
-            $message->is_me=$message->sender_id==Auth::user()->id;
+        $messages = $messages->map(function ($message) {
+            $message->is_me = $message->sender_id == Auth::user()->id;
             return $message;
         });
         return response()->json($messages);
