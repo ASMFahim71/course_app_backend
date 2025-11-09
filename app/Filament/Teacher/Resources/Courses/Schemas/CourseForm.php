@@ -20,14 +20,16 @@ class CourseForm
         return $schema
             ->components([
 
-                TextInput::make('teacher_name')
+                TextInput::make('teacher.name')
                 ->label('Teacher')
                 ->default(fn() => Auth::user()->name)
                 ->disabled()
                 ->dehydrated(false),
                   
-                Hidden::make('user_token')
-                    ->default(fn() => Auth::user()->token),
+                TextInput::make('user_token')
+                    ->default(fn() => Auth::user()->token)
+                    ->disabled()
+                    ->dehydrated(false),
 
                 TextInput::make('name')
                     ->required(),

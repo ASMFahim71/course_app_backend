@@ -9,6 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+
 class TeacherProfilesTable
 {
     public static function configure(Table $table): Table
@@ -16,9 +17,10 @@ class TeacherProfilesTable
         return $table
             ->columns([
                 ImageColumn::make('avatar')
+                    ->square()
                     ->disk('public')
                     ->visibility('public'),
-                    
+
                 // ImageColumn::make('cover')
                 // ->imageHeight(100),
                 TextColumn::make('rating'),

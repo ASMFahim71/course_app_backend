@@ -9,6 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\ImageColumn;
 class MembersTable
 {
     public static function configure(Table $table): Table
@@ -34,8 +35,10 @@ class MembersTable
                         'primary' => 'student',
                     ])
                     ->sortable(),
-                TextColumn::make('avatar')
-                    ->searchable(),
+                ImageColumn::make('avatar')
+                ->square()    
+                ->disk('public'),
+                    
               
                 // TextColumn::make('open_id')
                 //     ->searchable(),

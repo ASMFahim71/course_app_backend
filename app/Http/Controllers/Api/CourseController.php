@@ -8,6 +8,7 @@ use App\Models\Course;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Member;
 use App\Models\TeacherProfile;
+
 class CourseController extends Controller
 {
     public function courseList(Request $request)
@@ -27,7 +28,9 @@ class CourseController extends Controller
     {
 
         //sort by created_at desc
-        $courses = Course::select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->orderBy('created_at', 'desc')->get();
+        $courses = Course::select('name', 'thumbnail', 
+        'price', 'lesson_num', 
+        'price', 'id')->orderBy('created_at', 'desc')->get();
 
 
         return response()->json([
@@ -41,7 +44,14 @@ class CourseController extends Controller
     {
 
         //sort by follow desc
-        $courses = Course::select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->orderBy('follow', 'desc')->get();
+        $courses = Course::select(
+            'name',
+            'thumbnail',
+            'price',
+            'lesson_num',
+            'price',
+            'id'
+        )->orderBy('follow', 'desc')->get();
 
 
         return response()->json([
@@ -113,8 +123,6 @@ class CourseController extends Controller
             ],
             200
         );
-
-
     }
 
     public function coursesSearch(Request $request)
@@ -132,8 +140,6 @@ class CourseController extends Controller
             ],
             200
         );
-
-
     }
 
     public function authorCourseList(Request $request)
@@ -208,7 +214,4 @@ class CourseController extends Controller
             'status' => '1',
         ], 200);
     }
-
 }
-
-

@@ -15,12 +15,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-
+use UnitEnum;
 class CourseTypeResource extends Resource
 {
     protected static ?string $model = CourseType::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
+   
+    protected static string|UnitEnum|null $navigationGroup = 'Course Management';
+ 
 
     protected static ?string $recordTitleAttribute = 'coursetype';
 

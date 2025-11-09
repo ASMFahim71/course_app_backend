@@ -68,7 +68,8 @@ class LessonForm
                             ->directory('lesson-videos')
                             ->default(null)
                             ->visibility('public')
-                            ->acceptedFileTypes(['video/mp4', 'video/mov', 'video/avi', 'video/wmv', 'video/mp3', 'video/m4a', 'video/wma']),
+                            ->acceptedFileTypes(['video/mp4', 'video/mov', '
+                            video/avi', 'video/wmv', 'video/mp3', 'video/m4a', 'video/wma']),
 
                     ])
                     ->columns(3)

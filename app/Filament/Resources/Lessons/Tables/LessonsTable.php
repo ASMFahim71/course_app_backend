@@ -24,7 +24,9 @@ class LessonsTable
                 TextColumn::make('name')
                     ->searchable(),
                 ImageColumn::make('thumbnail')
-                    ->disk('public'),
+                    ->disk('public')
+                    ->size(50)
+                    ->square(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
