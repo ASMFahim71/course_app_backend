@@ -7,6 +7,8 @@ use Filament\Schemas\Schema;
 use App\Models\Course;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\ViewEntry;
+use Illuminate\Support\Facades\Storage;
 class LessonInfolist
 {
     public static function configure(Schema $schema): Schema
@@ -20,8 +22,8 @@ class LessonInfolist
                 TextEntry::make('name'),
                
                 ImageEntry::make('thumbnail')
-                ->disk('public')
-                ->imageHeight(100),
+                    ->disk('s3')
+                    ->imageHeight(100),
 
                 RepeatableEntry::make('video')
                     ->label('Videos')
@@ -31,18 +33,13 @@ class LessonInfolist
                             ->columnSpan(1),
                         ImageEntry::make('thumbnail')
                             ->label('Thumbnail')
-                            ->disk('public')
+                            ->disk('s3')
                             ->imageHeight(80)
                             ->columnSpan(1),
-                            TextEntry::make('url')
-                            ->label('video')
-                            ->html()
-                            ->formatStateUsing(fn($state) => $state
-                                ? "<video width='320' height='200' controls>
-                                       <source src='" . asset('storage/' . $state) . "' type='video/mp4'>
-                                       Your browser does not support the video tag.
-                                   </video>"
-                                : 'No video available'),
+                        ViewEntry::make('hls_playlist')
+                            ->label('Video Player')
+                            ->view('filament.components.hls-player')
+                            ->columnSpanFull(),
         
                     ])
                     ->columns(3)
