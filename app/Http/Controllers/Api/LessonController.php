@@ -19,7 +19,8 @@ class LessonController extends Controller
             'name',
             'thumbnail',
             'video',
-            'description'
+            'description',
+            'hls_processing'
         )->get();
 
         return response()->json([
@@ -48,11 +49,11 @@ class LessonController extends Controller
        $id=$request->id;
        try{
         $result= Lesson::where('id','=',$id)->select(
-            
             'name',
             'thumbnail',
             'video',
-            'description'
+            'description',
+            'hls_processing'
         )->get();
 
         return response()->json([

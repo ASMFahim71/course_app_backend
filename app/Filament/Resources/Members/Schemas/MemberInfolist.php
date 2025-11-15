@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Members\Schemas;
 
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -18,8 +19,10 @@ class MemberInfolist
                 TextEntry::make('name'),
                 TextEntry::make('email')
                     ->label('Email address'),
-                TextEntry::make('avatar'),
-            
+                ImageEntry::make('avatar_url')
+                    ->disk('s3')
+                    ->imageHeight(100),
+
                 TextEntry::make('open_id'),
                 TextEntry::make('token'),
                 TextEntry::make('age')

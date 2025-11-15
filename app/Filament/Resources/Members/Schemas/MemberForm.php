@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Members\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
@@ -36,8 +37,13 @@ class MemberForm
                     ->native(false),
 
 
-                TextInput::make('avatar')
-                    ->default(null),
+                          FileUpload::make('avatar')
+                            ->label('Avatar')
+                            ->placeholder('Select image')
+                            ->disk('s3')
+                            ->directory('avatars')
+                            ->visibility('public')
+                            ->dehydrated(true),
                
                 TextInput::make('open_id')
                     ->default(null),

@@ -12,12 +12,12 @@ class TeacherProfileInfolist
         return $schema
             ->components([
                 ImageEntry::make('avatar')
-                ->disk('public')
+                ->disk('s3')
                 ->visibility('public')
                 
                 ->imageHeight(100),
                 ImageEntry::make('cover')
-                ->disk('public')
+                ->disk('s3')
                 ->visibility('public')
                 
                 ->imageHeight(100),
