@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('transaction_id')->nullable()->after('status');
+        Schema::table('message', function (Blueprint $table) {
+           $table->foreign('chat_id')->references('id')->on('chats')->onDelete('cascade');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('transaction_id');
+        Schema::table('messages', function (Blueprint $table) {
+            //
         });
     }
 };

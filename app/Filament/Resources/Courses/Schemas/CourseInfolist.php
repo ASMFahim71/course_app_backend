@@ -8,6 +8,8 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\FileEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\VideoEntry;
+use Illuminate\Contracts\Cache\Store;
+use Storage;
 
 class CourseInfolist
 {
@@ -23,20 +25,19 @@ class CourseInfolist
                 
                 
                 ImageEntry::make('thumbnail')
-                ->disk('public')
+                ->disk('s3')
                 ->visibility('public')
                 
                 ->imageHeight(100),
 
-
-                TextEntry::make('video')
-                    ->html()
-                    ->formatStateUsing(fn($state) => $state
-                        ? "<video width='320' height='200' controls>
-                               <source src='" . asset('storage/' . $state) . "' type='video/mp4'>
-                               Your browser does not support the video tag.
-                           </video>"
-                        : 'No video available'),
+                        TextEntry::make('video')
+                            ->html()
+                            ->formatStateUsing(fn($state) => $state
+                                ? "<video width='320' height='200' controls>
+                                       <source src='" . Storage::disk('s3')->url($state) . "' type='video/mp4'>
+                                       Your browser does not support the video tag.
+                                   </video>"
+                                : 'No video available'),
 
 
 

@@ -15,7 +15,7 @@ class TeacherProfileForm
             ->components([
               
                 FileUpload::make('avatar')
-                    ->disk('public')
+                    ->disk('s3')
                     ->directory('teacher-avatars')
                     ->visibility('public')
                     ->required(fn(string $context): bool => $context === 'create')
@@ -29,7 +29,7 @@ class TeacherProfileForm
                     ->preload(),
                 
                 FileUpload::make('cover')
-                    ->disk('public')
+                    ->disk('s3')
                     ->directory('teacher-covers')
                     ->visibility('public')
                     ->required(fn(string $context): bool => $context === 'create')

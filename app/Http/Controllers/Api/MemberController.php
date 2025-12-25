@@ -89,16 +89,40 @@ class MemberController extends Controller
             ], 500);
         }
     }
+    public function getUserId(Request $request)
+    {
+        $user = $request->user(); 
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired token.'
+            ], 401);
+        }
+
+        return response()->json([
+            'code'=>200,
+            'success' => true,
+            'data' => $user->id,
+        ],200);
+    }
 
     public function update_photo(Request $request)
     {
         $user = Auth::user();
-        $filepath = $request->avatar->store('/avatars', 'public');
+        
+        // Store file in S3 bucket instead of local storage
+        $filepath = $request->avatar->store('avatars', 's3');
+        
         Member::where('id', '=', $user->id)->update(['avatar' => $filepath]);
+        
+        // Return full S3 URL
+        $fullUrl = Storage::disk('s3')->url($filepath);
+        
         return response()->json([
             'code' => 200,
             'msg' => 'Photo updated successfully',
-            'data' => $filepath
+            'data' => $fullUrl
         ], 200);
     }
 

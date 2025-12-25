@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+
 class Course extends Model
 {
     protected $fillable = [
@@ -41,5 +43,23 @@ class Course extends Model
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(Member::class, 'user_token', 'token');
+    }
+
+    // Override toArray to replace paths with full URLs
+    public function toArray()
+    {
+        $array = parent::toArray();
+        
+        // Replace thumbnail path with full URL
+        if (isset($array['thumbnail'])) {
+            $array['thumbnail'] = Storage::disk('s3')->url($array['thumbnail']);
+        }
+        
+        // Replace video path with full URL
+        if (isset($array['video'])) {
+            $array['video'] = Storage::disk('s3')->url($array['video']);
+        }
+        
+        return $array;
     }
 }

@@ -5,10 +5,36 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\LessonController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SslCommerzController;
+use App\Http\Controllers\Api\HLSKeyController;
+use App\Http\Controllers\Api\HLSProxyController;
+use App\Http\Controllers\Api\HLSStreamController;
+use Illuminate\Support\Facades\Broadcast;
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 
  Route::post('/login',[MemberController::class,'login']);
+
+// HLS streaming proxy with proper CORS headers
+Route::options('/hls-stream/{path}', [HLSStreamController::class, 'options'])->where('path', '.*');
+Route::get('/hls-stream/{path}', [HLSStreamController::class, 'stream'])->where('path', '.*');
+
+// HLS proxy to add CORS headers (serves playlist and segments through Laravel)
+Route::get('/hls-proxy/{path}', [HLSProxyController::class, 'proxy'])->where('path', '.*');
+
+// HLS decryption key endpoint (must be outside auth middleware for Video.js to access)
+Route::get('/hls/keys/{keyId}', [HLSKeyController::class, 'getKey']);
+Route::options('/hls/keys/{keyId}', function() {
+    return response('', 200, [
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Methods' => 'GET, OPTIONS',
+        'Access-Control-Allow-Headers' => '*',
+        'Access-Control-Max-Age' => '86400',
+    ]);
+});
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::any('/courseList', [CourseController::class, 'courseList']);
@@ -28,6 +54,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::any('/memberPay',[MemberController::class,'memberPayment']);
     Route::any('/changeName',[MemberController::class,'changeName']);
     Route::any('/changeDescription',[MemberController::class,'changeDescription']);
+          Route::post('/users',[MessageController::class,'users']);
+        Route::post('/sendMessage',[MessageController::class,'sendMessage']);
+        Route::post('/getMessage/{id}',[MessageController::class,'getMessage']);
+        Route::post('/getUserId',[MemberController::class,'getUserId']);
 });
 
 Route::any('/webGoHooks', [PaymentController::class, 'webGoHooks']);
@@ -46,6 +76,8 @@ Route::get('/uploads/{filename}', function ($filename) {
         abort(404);
     }
 
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+    Route::any('/webGoHooks',[PaymentController::class,'webGoHooks']);
     return response()->file($path, [
         'Access-Control-Allow-Origin' => '*',
         'Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS',

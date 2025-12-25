@@ -38,7 +38,7 @@ class CourseForm
                     ->required(),
 
                 FileUpload::make('thumbnail')
-                    ->disk('public')
+                    ->disk('s3')
                     ->directory('course-thumbnails')
                     ->visibility('public')
                     ->required(fn(string $context): bool => $context === 'create')
@@ -46,7 +46,7 @@ class CourseForm
                     
 
                 FileUpload::make('video')
-                    ->disk('public')
+                    ->disk('s3')
                     ->maxSize(51200000)
                     ->directory('course-videos')
                     ->default(null)

@@ -8,6 +8,8 @@ use App\Models\Course;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Member;
 use App\Models\TeacherProfile;
+use Exception;
+
 class CourseController extends Controller
 {
     public function courseList(Request $request)
@@ -139,13 +141,24 @@ class CourseController extends Controller
     public function authorCourseList(Request $request)
     {
         $token = $request->token;
-        $courses = Course::where('user_token', '=', $token)
-            ->select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
-        return response()->json([
-            'code' => 200,
-            'msg' => 'Author Course List',
-            'data' => $courses
-        ], 200);
+        //grab errors with try catch block
+        try {
+
+
+            $courses = Course::where('user_token', '=', $token)
+                ->select('name', 'thumbnail', 'price', 'lesson_num', 'price', 'id')->get();
+            return response()->json([
+                'code' => 200,
+                'msg' => 'Author Course List',
+                'data' => $courses
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'msg' => $e->getMessage(),
+                'data' => []
+            ], 500);
+        }
     }
 
     public function courseAuthor(Request $request)
@@ -157,29 +170,37 @@ class CourseController extends Controller
         ->where('orders.status', '=', 1)
         ->select('courses.name', 'courses.thumbnail', 'courses.price', 'courses.lesson_num', 'courses.id')
         ->get(); */
+        //grab errors with try catch block
+        try {
+
+            $author = TeacherProfile::join('members', 'teacher_profiles.user_token', '=', 'members.token')
+                ->where('teacher_profiles.user_token', '=', $token)
+                ->select(
+                    'members.name',
+                    'members.description',
+                    'teacher_profiles.avatar',
+                    'teacher_profiles.cover',
+                    'teacher_profiles.rating',
+                    'teacher_profiles.downloads',
+                    'teacher_profiles.total_students',
+                    'teacher_profiles.job',
+                    'members.token'
+                )
+                ->first();
 
 
-        $author = TeacherProfile::join('members', 'teacher_profiles.user_token', '=', 'members.token')
-            ->where('teacher_profiles.user_token', '=', $token)
-            ->select(
-                'members.name',
-                'members.description',
-                'teacher_profiles.avatar',
-                'teacher_profiles.cover',
-                'teacher_profiles.rating',
-                'teacher_profiles.downloads',
-                'teacher_profiles.total_students',
-                'teacher_profiles.job',
-                'members.token'
-            )
-            ->first();
-
-
-        return response()->json([
-            'code' => 200,
-            'msg' => 'Author Info',
-            'data' => $author
-        ], 200);
+            return response()->json([
+                'code' => 200,
+                'msg' => 'Author Info',
+                'data' => $author
+            ], 200);
+        } catch(\Exception $e){
+            return response()->json([
+                'code' => 500,
+                'msg' => $e->getMessage(),
+                'data' => []
+            ], 200);
+        }
     }
 
     //course purchased check

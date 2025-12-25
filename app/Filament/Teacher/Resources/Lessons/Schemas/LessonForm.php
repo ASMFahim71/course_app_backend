@@ -32,7 +32,6 @@ class LessonForm
                 ->required(),
             
                 FileUpload::make('thumbnail')
-                ->disk('public')
                 ->directory('video-thumbnails')
                 ->visibility('public')
                 ->required(fn(string $context): bool => $context === 'create')
@@ -50,7 +49,6 @@ class LessonForm
                     FileUpload::make('thumbnail')
                         ->label('Thumbnail')
                         ->placeholder('Select image')
-                        ->disk('public')
                         ->directory('lesson-thumbnails')
                         ->visibility('public')
                         ->image()
@@ -64,8 +62,7 @@ class LessonForm
                         ->columnSpan(1),
                         FileUpload::make('url')
                         ->label('video')
-                        ->disk('public')
-                        ->maxSize(51200000)
+                        ->maxSize(512000)
                         ->directory('lesson-videos')
                         ->default(null)
                         ->visibility('public')

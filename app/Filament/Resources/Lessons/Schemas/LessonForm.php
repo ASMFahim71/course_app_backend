@@ -38,7 +38,6 @@ class LessonForm
                     ->required(),
 
                 FileUpload::make('thumbnail')
-                    ->disk('public')
                     ->directory('video-thumbnails')
                     ->visibility('public')
                     ->required(fn(string $context): bool => $context === 'create')
@@ -56,18 +55,16 @@ class LessonForm
                         FileUpload::make('thumbnail')
                             ->label('Thumbnail')
                             ->placeholder('Select image')
-                            ->disk('public')
                             ->directory('lesson-thumbnails')
                             ->visibility('public')
-                            ->dehydrated(true)
-                        ,
+                            ->dehydrated(true),
                         FileUpload::make('url')
                             ->label('video')
-                            ->disk('public')
-                            ->maxSize(51200000)
-                            ->directory('lesson-videos')
-                            ->default(null)
+                            ->maxSize(512000)
+                            ->disk('local') // Use local disk instead of S3
+                            ->directory('lesson-videos-temp') // Temporary local directory
                             ->visibility('public')
+                            ->dehydrated(true)
                             ->acceptedFileTypes(['video/mp4', 'video/mov', 'video/avi', 'video/wmv', 'video/mp3', 'video/m4a', 'video/wma']),
 
                     ])
